@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace HeimrichHannot\InputCounterBundle\EventListener;
 
 use Contao\Controller;
@@ -33,8 +39,7 @@ class HookListener
         $table = $this->request->getGet('table');
         $id = $this->request->getGet('id');
 
-        if (!isset($GLOBALS['HUH_INPUT_COUNT']) || !is_array($GLOBALS['HUH_INPUT_COUNT']) || !$table || !$id)
-        {
+        if (!isset($GLOBALS['HUH_INPUT_COUNT']) || !\is_array($GLOBALS['HUH_INPUT_COUNT']) || !$table || !$id) {
             return $buffer;
         }
 
@@ -42,11 +47,9 @@ class HookListener
 
         $this->addDefaultsToConfig();
 
-        foreach ($GLOBALS['HUH_INPUT_COUNT'] as $configData)
-        {
-            if ($configData['table'] === $table)
-            {
-                $buffer = str_replace('<body', '<body data-input-counter="' . htmlspecialchars(\json_encode($configData['fields']), ENT_QUOTES, 'UTF-8') . '"', $buffer);
+        foreach ($GLOBALS['HUH_INPUT_COUNT'] as $configData) {
+            if ($configData['table'] === $table) {
+                $buffer = str_replace('<body', '<body data-input-counter="'.htmlspecialchars(json_encode($configData['fields']), ENT_QUOTES, 'UTF-8').'"', $buffer);
 
                 break;
             }
@@ -57,36 +60,29 @@ class HookListener
 
     protected function addDefaultsToConfig()
     {
-        foreach ($GLOBALS['HUH_INPUT_COUNT'] as &$configData)
-        {
+        foreach ($GLOBALS['HUH_INPUT_COUNT'] as &$configData) {
             $table = $configData['table'];
             Controller::loadDataContainer($table);
             $dca = $GLOBALS['TL_DCA'][$table];
 
-            foreach ($configData['fields'] as &$fieldData)
-            {
+            foreach ($configData['fields'] as &$fieldData) {
                 $name = $fieldData['name'];
 
                 // inputType
                 $fieldData['type'] = $dca['fields'][$name]['inputType'];
 
                 // message
-                if (!isset($fieldData['message']))
-                {
+                if (!isset($fieldData['message'])) {
                     $fieldData['message'] = $GLOBALS['TL_LANG']['MSC']['huhInputCounterBundle']['charactersMessage'];
                 }
 
                 // max count
-                if (!isset($fieldData['max']))
-                {
+                if (!isset($fieldData['max'])) {
                     if (isset($dca['fields'][$name]['eval']['maxlength']) &&
-                        ($maxLength = $dca['fields'][$name]['eval']['maxlength']))
-                    {
+                        ($maxLength = $dca['fields'][$name]['eval']['maxlength'])) {
                         $fieldData['max'] = $maxLength;
-                    }
-                    else
-                    {
-                        throw new \Exception('No max value for the field "' . $table . '.' . $name . '" found.');
+                    } else {
+                        throw new \Exception('No max value for the field "'.$table.'.'.$name.'" found.');
                     }
                 }
             }
