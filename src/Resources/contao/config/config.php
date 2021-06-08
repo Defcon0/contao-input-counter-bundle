@@ -1,18 +1,22 @@
 <?php
 
-/**
- * Configuration
+/*
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
  */
+
 $GLOBALS['HUH_INPUT_COUNT'] = [];
 
-/**
+/*
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['parseBackendTemplate']['addInputCount'] = ['huh.input_count.listener.hooks', 'addInputCount'];
+$GLOBALS['TL_HOOKS']['parseBackendTemplate']['contao-input-counter-bundle'] = [
+    \HeimrichHannot\InputCounterBundle\EventListener\Contao\ParseBackendTemplateListener::class,
+    '__invoke',
+];
 
-/**
- * Assets
- */
-if (\Contao\System::getContainer()->get('huh.utils.container')->isBackend()) {
-    $GLOBALS['TL_JAVASCRIPT']['contao-input-counter-bundle'] = 'bundles/heimrichhannotcontaoinputcounter/input-counter-bundle.js|static';
-}
+$GLOBALS['TL_HOOKS']['loadDataContainer']['contao-input-counter-bundle'] = [
+    \HeimrichHannot\InputCounterBundle\EventListener\Contao\LoadDataContainerListener::class,
+    '__invoke',
+];

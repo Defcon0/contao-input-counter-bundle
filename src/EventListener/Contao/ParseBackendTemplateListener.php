@@ -6,20 +6,14 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace HeimrichHannot\InputCounterBundle\EventListener;
+namespace HeimrichHannot\InputCounterBundle\EventListener\Contao;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 
-class HookListener
+class ParseBackendTemplateListener
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
     /**
      * @var Request
      */
@@ -28,13 +22,12 @@ class HookListener
     /**
      * HookListener constructor.
      */
-    public function __construct(ContaoFrameworkInterface $framework, Request $request)
+    public function __construct(Request $request)
     {
-        $this->framework = $framework;
         $this->request = $request;
     }
 
-    public function addInputCount($buffer, $template)
+    public function __invoke($buffer, $template)
     {
         $table = $this->request->getGet('table');
         $id = $this->request->getGet('id');

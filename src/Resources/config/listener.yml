@@ -1,6 +1,0 @@
-services:
-    huh.input_count.listener.hooks:
-        class: HeimrichHannot\InputCounterBundle\EventListener\HookListener
-        arguments:
-            - "@contao.framework"
-            - "@huh.request"
