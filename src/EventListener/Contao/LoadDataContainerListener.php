@@ -8,23 +8,30 @@
 
 namespace HeimrichHannot\InputCounterBundle\EventListener\Contao;
 
-use HeimrichHannot\UtilsBundle\Container\ContainerUtil;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class LoadDataContainerListener
 {
     /**
-     * @var ContainerUtil
+     * @var RequestStack
      */
-    protected $containerUtil;
+    protected $requestStack;
 
-    public function __construct(ContainerUtil $containerUtil)
+    /**
+     * @var ScopeMatcher
+     */
+    protected $scopeMatcher;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher)
     {
-        $this->containerUtil = $containerUtil;
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function __invoke($table)
     {
-        if ($this->containerUtil->isBackend()) {
+        if ($this->requestStack->getCurrentRequest() !== null && $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest())) {
             $GLOBALS['TL_JAVASCRIPT']['contao-input-counter-bundle'] = 'bundles/heimrichhannotinputcounter/input-counter-bundle.js|static';
         }
     }

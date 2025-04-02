@@ -9,28 +9,16 @@
 namespace HeimrichHannot\InputCounterBundle\EventListener\Contao;
 
 use Contao\Controller;
+use Contao\Input;
 use Contao\System;
 use HeimrichHannot\RequestBundle\Component\HttpFoundation\Request;
 
 class ParseBackendTemplateListener
 {
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * HookListener constructor.
-     */
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     public function __invoke($buffer, $template)
     {
-        $table = $this->request->getGet('table');
-        $id = $this->request->getGet('id');
+        $table = Input::get('table');
+        $id = Input::get('id');
 
         if (!isset($GLOBALS['HUH_INPUT_COUNT']) || !\is_array($GLOBALS['HUH_INPUT_COUNT']) || !$table || !$id) {
             return $buffer;
