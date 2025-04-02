@@ -59,3 +59,7 @@ window.InputCounterBundle = {
 document.addEventListener('DOMContentLoaded', function() {
     InputCounterBundle.init();
 });
+
+document.addEventListener('turbo:load', function() {
+    InputCounterBundle.init();
+});
